@@ -25,7 +25,7 @@ export default function RootLayout({
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl font-bold">
-                    <a href="/">My WordPress Site</a>
+                    <a href="/">TDB TEST</a>
                   </h1>
                   <div className="md:hidden">{/* Mobile menu button will be inside Navigation component */}</div>
                 </div>

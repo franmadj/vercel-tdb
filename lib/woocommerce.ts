@@ -1,29 +1,23 @@
-// Example of authenticated WooCommerce API request with support for different methods
-export async function fetchWooCommerceAPI(endpoint: string, options: RequestInit = {}) {
+// Example of authenticated WooCommerce API request
+export async function fetchWooCommerceAPI(endpoint: string) {
   // For WooCommerce API v3
-  const wcApiUrl = `${process.env.WORDPRESS_API_URL.replace("/wp/v2", "")}/wc/v3/${endpoint}`
-
+  const wcApiUrl = `${process.env.WORDPRESS_API_URL.replace('/wp/v2', '')}/wc/v3/${endpoint}`;
+  
   // Create authentication string
-  const auth = Buffer.from(`${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`).toString("base64")
-
-  // Merge default options with provided options
-  const fetchOptions: RequestInit = {
-    method: options.method || "GET",
+  const auth = Buffer.from(`${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`).toString('base64');
+  
+  const res = await fetch(wcApiUrl, {
     headers: {
-      Authorization: `Basic ${auth}`,
-      "Content-Type": "application/json",
-      ...options.headers,
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/json',
     },
-    ...options,
-  }
-
-  const res = await fetch(wcApiUrl, fetchOptions)
-
+  });
+  
   if (!res.ok) {
-    throw new Error(`Failed to fetch WooCommerce data: ${res.status}`)
+    throw new Error(`Failed to fetch WooCommerce data: ${res.status}`);
   }
-
-  return res.json()
+  
+  return res.json();
 }
 
 // Get all products with pagination

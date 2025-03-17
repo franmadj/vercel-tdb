@@ -1,20 +1,25 @@
 import { fetchAPI, getPostsByCategory } from "@/lib/api"
 import PostCard from "@/components/post-card"
 import Pagination from "@/components/pagination"
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+
+
+interface CategoryPageProps {
+  params: { slug: string };
+  searchParams: { page: string };
+}
 
 export default async function CategoryPage({
   params,
   searchParams,
-}: {
-  params: { slug: string }
-  searchParams: { page: string }
-}) {
+}: CategoryPageProps) {
   const currentPage = Number(searchParams.page) || 1
   const postsPerPage = 9
 
   // Get category by slug
-  const categories = await fetchAPI(`categories?slug=${params.slug}`)
-  const category = categories[0]
+  const categories = await fetchAPI(`categories?slug=${params.slug}`);
+  const category = categories[0];
 
   if (!category) {
     return (
@@ -25,7 +30,7 @@ export default async function CategoryPage({
           Return to home
         </a>
       </div>
-    )
+    );
   }
 
   // Get posts for this category

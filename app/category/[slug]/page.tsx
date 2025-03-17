@@ -1,25 +1,33 @@
 import { fetchAPI, getPostsByCategory } from "@/lib/api"
 import PostCard from "@/components/post-card"
 import Pagination from "@/components/pagination"
-import { NextPage } from "next";
-import { useRouter } from "next/router";
 
 
-interface CategoryPageProps {
-  params: { slug: string };
-  searchParams: { page: string };
-}
 
-export default async function CategoryPage({
-  params,
-  searchParams,
-}: CategoryPageProps) {
-  const currentPage = Number(searchParams.page) || 1
+  type params= Promise<{ slug: string }>
+  type searchParams= Promise<{ page: string }>
+
+  type Post = {
+    id: string;      // or `number`, depending on your data type
+    title: string;
+    // add other fields here depending on the properties of `post`
+  }
+
+
+export default async function CategoryPage({params, searchParams}: {
+  params: params,
+  searchParams: searchParams
+}) {
+
+  const resolvedParams = await params;  // Resolving the params promise
+  const resolvedSearchParams = await searchParams;  // Resolving the searchParams promise
+
+  const currentPage = Number(resolvedSearchParams.page) || 1
   const postsPerPage = 9
 
   // Get category by slug
-  const categories = await fetchAPI(`categories?slug=${params.slug}`);
-  const category = categories[0];
+  const categories = await fetchAPI(`categories?slug=${resolvedParams.slug}`)
+  const category = categories[0]
 
   if (!category) {
     return (
@@ -30,7 +38,7 @@ export default async function CategoryPage({
           Return to home
         </a>
       </div>
-    );
+    )
   }
 
   // Get posts for this category
@@ -48,7 +56,7 @@ export default async function CategoryPage({
 
       {posts.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
+          {posts.map((post: Post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>

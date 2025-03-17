@@ -2,13 +2,23 @@ import { searchPosts } from "@/lib/api"
 import PostCard from "@/components/post-card"
 import Pagination from "@/components/pagination"
 
+type searchParams= Promise<{ q: string; page: string }>
+type Post = {
+  id: string;      // or `number`, depending on your data type
+  title: string;
+  // add other fields here depending on the properties of `post`
+}
+
 export default async function SearchResults({
   searchParams,
 }: {
-  searchParams: { q: string; page: string }
+  searchParams: searchParams
 }) {
-  const query = searchParams.q || ""
-  const currentPage = Number(searchParams.page) || 1
+
+  const resolvedSearchParams = await searchParams;  // Resolving the searchParams promise
+
+  const query = resolvedSearchParams.q || ""
+  const currentPage = Number(resolvedSearchParams.page) || 1
   const postsPerPage = 9
 
   const posts = await searchPosts(query, currentPage, postsPerPage)
@@ -22,7 +32,7 @@ export default async function SearchResults({
 
       {posts.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
+          {posts.map((post:Post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>

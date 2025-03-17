@@ -1,7 +1,7 @@
 // Example of authenticated WooCommerce API request
 export async function fetchWooCommerceAPI(endpoint: string) {
   // For WooCommerce API v3
-  const wcApiUrl = `${process.env.WORDPRESS_API_URL.replace('/wp/v2', '')}/wc/v3/${endpoint}`;
+  const wcApiUrl = `${process.env.WORDPRESS_API_URL!.replace('/wp/v2', '')}/wc/v3/${endpoint}`;
   
   // Create authentication string
   const auth = Buffer.from(`${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`).toString('base64');

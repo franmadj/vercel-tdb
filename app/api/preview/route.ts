@@ -9,11 +9,12 @@ export async function GET(request: Request) {
 
   // Check the secret and required parameters
   if (secret !== process.env.PREVIEW_SECRET || !slug) {
-    //return new Response("Invalid token", { status: 401 })
+   return new Response("Invalid token", { status: 401 })
   }
 
+  const draft = draftMode() as unknown as { enable: () => void } // Explicit type casting to ensure TypeScript knows it's a DraftMode object
   // Enable Draft Mode
-  draftMode().enable()
+  draft.enable()
 
   // Redirect to the path from the fetched post
   redirect(`/${postType === "posts" ? "posts" : "pages"}/${slug}`)

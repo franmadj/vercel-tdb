@@ -2,9 +2,21 @@ import { getAllPosts, getPostsCount } from "@/lib/api"
 import PostCard from "@/components/post-card"
 import Pagination from "@/components/pagination"
 
-export default async function Home({ params }: { params: { page?: string } }) {
+type params= Promise<{ search?: string }>
+
+type Post = {
+  id: string;      // or `number`, depending on your data type
+  title: string;
+  // add other fields here depending on the properties of `post`
+}
+
+export default async function Home({ params }: { params: params }) {
+
+  const resolvedParams = await params;  // Resolving the params promise
+
+
   // Get search params safely
-  const searchParams = new URLSearchParams(params?.search || "");
+  const searchParams = new URLSearchParams(resolvedParams?.search || "");
   const page = Number(searchParams.get("page")) || 1;
 
   const postsPerPage = 9;
@@ -19,7 +31,7 @@ export default async function Home({ params }: { params: { page?: string } }) {
       {posts.length > 0 ? (
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
+            {posts.map((post:Post) => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>

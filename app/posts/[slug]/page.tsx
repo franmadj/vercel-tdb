@@ -1,17 +1,29 @@
 import { getAllPosts, getPostBySlug } from "@/lib/api"
 import Link from "next/link"
 
+
+type Post = {
+  slug: string;      // or `number`, depending on your data type
+}
+
 // Generate static paths for all posts
 export async function generateStaticParams() {
   const posts = await getAllPosts()
 
-  return posts.map((post) => ({
+  return posts.map((post:Post) => ({
     slug: post.slug,
   }))
 }
 
-export default async function Post({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug)
+type params= Promise<{ slug: string }>
+
+
+export default async function Post({ params }: { params: params }) {
+
+  const resolvedParams = await params;  // Resolving the params promise
+
+
+  const post = await getPostBySlug(resolvedParams.slug)
 
   if (!post) {
     return <div>Post not found</div>

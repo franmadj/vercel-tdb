@@ -3,13 +3,18 @@ import ProductCard from "@/components/product-card"
 import Pagination from "@/components/pagination"
 import Link from "next/link"
 
+type searchParams= Promise<{ page: string; category: string }>
+
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: { page: string; category: string }
+  searchParams: searchParams
 }) {
-  const currentPage = Number(searchParams.page) || 1
-  const categoryId = searchParams.category ? Number(searchParams.category) : undefined
+
+  const resolvedSearchParams = await searchParams;  // Resolving the searchParams promise
+
+  const currentPage = Number(resolvedSearchParams.page) || 1
+  const categoryId = resolvedSearchParams.category ? Number(resolvedSearchParams.category) : undefined
   const productsPerPage = 12
 
   // Fetch products and categories

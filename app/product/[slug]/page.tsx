@@ -4,13 +4,19 @@ import ProductCard from "@/components/product-card"
 import Image from "next/image"
 import Link from "next/link"
 
+type params= Promise<{ slug: string }>
+
 export default async function ProductPage({
   params,
 }: {
-  params: { slug: string }
+  params: params
 }) {
+
+  const resolvedParams = await params;  // Resolving the params promise
+
+
   // Fetch product data
-  const product = await getProductBySlug(params.slug)
+  const product = await getProductBySlug(resolvedParams.slug)
 
   if (!product) {
     return (

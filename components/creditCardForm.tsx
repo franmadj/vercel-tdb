@@ -46,33 +46,7 @@ const CreditCardForm: React.FC = () => {
     if (!flex) return;
 
     const customStyles = {
-        '.flex-microform': {
-            'height': '20px;',
-            'background': '#ffffff;',
-            '-webkit-transition': 'background 200ms;',
-            'transition': 'background 200ms;',
-          },
-          
 
-          '#securityCode-container.flex-microform': {
-            'background': 'purple;'
-          },
-          
-          '.flex-microform-focused' :{
-            'background': 'lightyellow;'
-          },
-          
-          '.flex-microform-valid': {
-            'background': 'green;'
-          },
-          
-          '.flex-microform-valid.flex-microform-focused': {
-            'background': 'lightgreen;'
-          },
-          
-          '.flex-microform-autocomplete' :{
-            'background': '#faffbd;'
-          },
         'input': {
           'font-size': '16px',
           'color': '#3A3A3A'
@@ -144,46 +118,77 @@ const CreditCardForm: React.FC = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="cardholderName">Name</label>
-        <input id="cardholderName" className="form-control" name="cardholderName" placeholder="Name on the card"/>
-        <label id="card-number-container">Card Number</label>
-        <div id="card-number-container" className="form-control"></div>
-        <label htmlFor="security-code-container">Security Code</label>
-        <div id="security-code-container" className="form-control"></div>
-    </div>
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+      {/* Cardholder Name */}
+      <div className="mb-4">
+        <label htmlFor="cardholderName" className="block text-gray-700 font-semibold mb-1">
+          Name on Card
+        </label>
+        <input
+          id="cardholderName"
+          name="cardholderName"
+          placeholder="John Doe"
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
+        />
+      </div>
 
-    <div className="form-row">
-        <div className="form-group col-md-6">
-            <label htmlFor="expMonth">Expiry month</label>
-            <select id="expMonth" className="form-control">
-                <option>01</option>
-                <option>02</option>
-                <option>03</option>
-                <option>04</option>
-                <option>05</option>
-                <option>06</option>
-                <option>07</option>
-                <option>08</option>
-                <option>09</option>
-                <option>10</option>
-                <option>11</option>
-                <option>12</option>
-            </select>
+      {/* Card Number */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-semibold mb-1">Card Number</label>
+        <div id="card-number-container" className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></div>
+      </div>
+
+      {/* Security Code */}
+      <div className="mb-4">
+        <label htmlFor="security-code-container" className="block text-gray-700 font-semibold mb-1">
+          Security Code
+        </label>
+        <div id="security-code-container" className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></div>
+      </div>
+
+      {/* Expiry Date */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* Expiry Month */}
+        <div>
+          <label htmlFor="expMonth" className="block text-gray-700 font-semibold mb-1">
+            Expiry Month
+          </label>
+          <select id="expMonth" className="w-full p-2 border border-gray-300 rounded-md">
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i} value={String(i + 1).padStart(2, "0")}>
+                {String(i + 1).padStart(2, "0")}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="form-group col-md-6">
-            <label htmlFor="expYear">Expiry year</label>
-            <select id="expYear" className="form-control">
-                <option>2021</option>
-                <option>2022</option>
-                <option>2023</option>
-            </select>
+
+        {/* Expiry Year */}
+        <div>
+          <label htmlFor="expYear" className="block text-gray-700 font-semibold mb-1">
+            Expiry Year
+          </label>
+          <select id="expYear" className="w-full p-2 border border-gray-300 rounded-md">
+            {Array.from({ length: 10 }, (_, i) => (
+              <option key={i} value={2024 + i}>
+                {2024 + i}
+              </option>
+            ))}
+          </select>
         </div>
-    </div>
-    <button type="button" id="pay-button" className="btn btn-primary">Pay</button>
-    <input type="hidden" id="flexresponse" name="flexresponse"></input>
-      </form>
+      </div>
+
+      {/* Hidden Input */}
+      <input type="hidden" id="flexresponse" name="flexresponse" />
+
+      {/* Pay Button */}
+      <button
+        type="submit"
+        id="pay-button"
+        className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition"
+      >
+        Pay
+      </button>
+    </form>
 
       {token && <p>Token generado: {token}</p>}
     </div>

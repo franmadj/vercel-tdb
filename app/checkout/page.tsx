@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
+import CreditCardForm from "@/components/creditCardForm"; // Adjust the import path as needed
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart()
@@ -232,8 +233,7 @@ export default function CheckoutPage() {
                 </select>
               </div>
 
-              <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
-              <p className="text-gray-600 mb-4">This is a demo checkout. No actual payment will be processed.</p>
+              
 
               <button
                 type="submit"
@@ -243,6 +243,11 @@ export default function CheckoutPage() {
                 {isSubmitting ? "Processing..." : "Place Order"}
               </button>
             </form>
+
+            <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
+              <p className="text-gray-600 mb-4">Enter your payment details below:</p>
+              <CreditCardForm />
+
           </div>
         </div>
 

@@ -46,6 +46,33 @@ const CreditCardForm: React.FC = () => {
     if (!flex) return;
 
     const customStyles = {
+        '.flex-microform': {
+            'height': '20px;',
+            'background': '#ffffff;',
+            '-webkit-transition': 'background 200ms;',
+            'transition': 'background 200ms;',
+          },
+          
+
+          '#securityCode-container.flex-microform': {
+            'background': 'purple;'
+          },
+          
+          '.flex-microform-focused' :{
+            'background': 'lightyellow;'
+          },
+          
+          '.flex-microform-valid': {
+            'background': 'green;'
+          },
+          
+          '.flex-microform-valid.flex-microform-focused': {
+            'background': 'lightgreen;'
+          },
+          
+          '.flex-microform-autocomplete' :{
+            'background': '#faffbd;'
+          },
         'input': {
           'font-size': '16px',
           'color': '#3A3A3A'

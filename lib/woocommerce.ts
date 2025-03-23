@@ -22,7 +22,7 @@ export async function fetchWooCommerceAPI(endpoint: string) {
 
 // Get all products with pagination
 export async function getProducts(page = 1, perPage = 12, category?: number) {
-  let endpoint = `products?page=${page}&per_page=${perPage}&_embed`
+  let endpoint = `products?page=${page}&per_page=${perPage}&_embed&exclude[]=471605&exclude[]=394019`
 
   if (category) {
     endpoint += `&category=${category}`

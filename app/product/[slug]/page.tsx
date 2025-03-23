@@ -1,7 +1,6 @@
-import { getProductBySlug, getFeaturedProducts } from "@/lib/woocommerce"
-import AddToCartButton from "@/components/add-to-cart-button"
+import { getProductBySlug, getFeaturedProducts, getProductVariations } from "@/lib/woocommerce"
+import ProductDetails from "@/components/product-details"
 import ProductCard from "@/components/product-card"
-import Image from "next/image"
 import Link from "next/link"
 
 type params= Promise<{ slug: string }>
@@ -30,6 +29,12 @@ export default async function ProductPage({
     )
   }
 
+  // Fetch variations if this is a variable product
+  let variations = []
+  if (product.type === "variable") {
+    variations = await getProductVariations(product.id)
+  }
+
   // Fetch related products
   const relatedProducts = await getFeaturedProducts(4)
 
@@ -49,77 +54,9 @@ export default async function ProductPage({
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        {/* Product images */}
-        <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden">
-          <Image
-            src={product.images[0]?.src || "/placeholder.svg?height=500&width=500"}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain"
-          />
-        </div>
+      <ProductDetails product={product} variations={variations} />
 
-        {/* Product details */}
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-
-          {/* Price */}
-          <div className="mb-4">
-            {product.on_sale ? (
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400 line-through text-lg">{formatPrice(product.regular_price)}</span>
-                <span className="text-2xl font-semibold text-red-600">{formatPrice(product.sale_price)}</span>
-              </div>
-            ) : (
-              <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
-            )}
-          </div>
-
-          {/* Short description */}
-          <div className="text-gray-600 mb-6" dangerouslySetInnerHTML={{ __html: product.short_description }} />
-
-          {/* Add to cart */}
-          <AddToCartButton product={product} />
-
-          {/* Additional info */}
-          <div className="mt-8 border-t pt-6">
-            <h3 className="text-lg font-semibold mb-2">Product Details</h3>
-            <ul className="space-y-2 text-gray-600">
-              {product.sku && (
-                <li>
-                  <span className="font-medium">SKU:</span> {product.sku}
-                </li>
-              )}
-              {product.categories && product.categories.length > 0 && (
-                <li>
-                  <span className="font-medium">Categories:</span>{" "}
-                  {product.categories.map((cat: any, index: number) => (
-                    <span key={cat.id}>
-                      <Link href={`/shop?category=${cat.id}`} className="text-blue-600 hover:underline">
-                        {cat.name}
-                      </Link>
-                      {index < product.categories.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </li>
-              )}
-              {product.tags && product.tags.length > 0 && (
-                <li>
-                  <span className="font-medium">Tags:</span>{" "}
-                  {product.tags.map((tag: any, index: number) => (
-                    <span key={tag.id}>
-                      {tag.name}
-                      {index < product.tags.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Product description */}
       <div className="mb-12">

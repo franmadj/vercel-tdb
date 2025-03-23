@@ -62,7 +62,7 @@ export default function MiniCart() {
               <>
                 <div className="divide-y">
                   {cart.map((item) => (
-                    <div key={item.id} className="p-4 flex gap-3">
+                    <div key={`${item.id}-${item.variation}`} className="p-4 flex gap-3">
                       <div className="relative w-16 h-16 flex-shrink-0">
                         <Image
                           src={item.image || "/placeholder.svg?height=64&width=64"}
@@ -80,6 +80,8 @@ export default function MiniCart() {
                         >
                           {item.name}
                         </Link>
+
+                        {item.variation && <p className="text-xs text-gray-500">{item.variation}</p>}
 
                         <div className="flex justify-between items-center mt-2">
                           <div className="flex items-center border rounded">

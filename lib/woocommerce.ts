@@ -42,6 +42,11 @@ export async function getProductBySlug(slug: string) {
   return products[0]
 }
 
+// Get product variations
+export async function getProductVariations(productId: number) {
+  return fetchWooCommerceAPI(`products/${productId}/variations?per_page=100`)
+}
+
 // Get featured products
 export async function getFeaturedProducts(limit = 4) {
   return fetchWooCommerceAPI(`products?featured=true&per_page=${limit}`)

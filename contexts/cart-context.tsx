@@ -9,6 +9,7 @@ export interface CartItem {
   quantity: number
   image: string
   slug: string
+  variation?: string
 }
 
 interface CartContextType {
@@ -46,7 +47,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Add item to cart
   const addToCart = (item: CartItem) => {
     setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex((cartItem) => cartItem.id === item.id)
+      // For variations, we need to check if the exact same variation exists
+      const existingItemIndex = prevCart.findIndex(
+        (cartItem) => cartItem.id === item.id && cartItem.variation === item.variation,
+      )
 
       if (existingItemIndex >= 0) {
         // Item already exists, update quantity

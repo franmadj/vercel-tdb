@@ -52,71 +52,10 @@ const CreditCardForm: React.FC<CreditCardFormProps> = ({
       }
     }
 
-    const loadCyberSourceScript = (
-      url: string,
-      integrity: string,
-      captureContext: string
-    ) => {
-      console.log("loadCyberSourceScript", url, integrity)
-      const script = document.createElement("script")
-      script.src = url
-      script.async = true
-      script.integrity = integrity
-      script.crossOrigin = "anonymous"
-      script.onload = () => initializeMicroform(captureContext) // Corrected line
-      document.body.appendChild(script)
-    }
 
-    fetchCaptureContext()
   }, [])
 
-  const initializeMicroform = (captureContext: string) => {
-    console.log("window", window)
 
-    console.log("captureContext", captureContext)
-
-    const flex = new (window as any).Flex(captureContext)
-
-    console.log("flex", flex)
-
-    if (!flex) return
-
-    const customStyles = {
-      input: {
-        "font-size": "16px",
-        color: "#0a0a0a69",
-      },
-      "::placeholder": {
-        color: "#0a0a0a69",
-      },
-      ":focus": {
-        color: "#0a0a0a69",
-      },
-      ":hover": {
-        "font-style": "italic",
-      },
-      ":disabled": {
-        cursor: "not-allowed",
-      },
-      valid: {
-        color: "green",
-      },
-      invalid: {
-        color: "red",
-      },
-    }
-
-    window.microform = flex.microform({ styles: customStyles })
-
-    const number = window.microform.createField("number", {
-      placeholder: "Enter card number",
-    })
-    const securityCode = window.microform.createField("securityCode", {
-      placeholder: "•••",
-    })
-    number.load("#card-number-container")
-    securityCode.load("#security-code-container")
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     console.log("handleSubmit")
@@ -126,12 +65,9 @@ const CreditCardForm: React.FC<CreditCardFormProps> = ({
       return
     }
 
-    const expirationMonth = (document.getElementById('expMonth') as HTMLSelectElement)?.value;
-    const expirationYear = (document.getElementById('expYear') as HTMLSelectElement)?.value;
-
     const options = {
-      expirationMonth: expirationMonth,
-      expirationYear: expirationYear
+      expirationMonth: '01',
+      expirationYear: '2031'
   };
 
     window.microform.createToken(options, (err: any, token: string) => {
@@ -141,41 +77,11 @@ const CreditCardForm: React.FC<CreditCardFormProps> = ({
         return
       }
       console.log("Token successfully created!", token)
-      sendTokenToBackend(token)
+
     })
   }
 
-  const sendTokenToBackend = async (token: string) => {
-    const formData = new FormData()
-    formData.append("action", "process_payment")
-    formData.append("token", token)
-    formData.append("orderAmount", orderAmount)
-    formData.append("orderId", orderId)
 
-    // Append billing details
-    Object.entries(billingDetails).forEach(([key, value]) => {
-      formData.append(key, value)
-    })
-    try {
-      const response = await fetch(
-        "https://staging.texasdebrazil.com/wp-admin/admin-ajax.php",
-        {
-          method: "POST",
-          body: formData,
-        }
-      )
-
-      const data = await response.json()
-      console.log("Respuesta del backend:", data)
-      if (data.success) {
-        
-        router.push(`/thankyou?order_id=${orderId}`)
-        //onPaymentSuccess() // Trigger parent event
-      }
-    } catch (error) {
-      console.error("Error al enviar el token:", error)
-    }
-  }
 
   return (
     <div>

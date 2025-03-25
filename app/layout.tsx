@@ -5,6 +5,8 @@ import Navigation from "@/components/navigation"
 import SearchForm from "@/components/search-form"
 import MiniCart from "@/components/mini-cart"
 import { CartProvider } from "@/contexts/cart-context"
+// Add the import for NavigationProgress
+import NavigationProgress from "@/components/navigation-progress"
 
 export const metadata: Metadata = {
   title: "My WordPress Site",
@@ -20,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <CartProvider>
+        <NavigationProgress />
           <header className="bg-white shadow-sm sticky top-0 z-10">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

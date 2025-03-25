@@ -1,4 +1,5 @@
 import type React from "react"
+import { Suspense } from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import Navigation from "@/components/navigation"
@@ -22,7 +23,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <CartProvider>
+        <Suspense fallback={<div>Loading...</div>}>
         <NavigationProgress />
+        </Suspense>
           <header className="bg-white shadow-sm sticky top-0 z-10">
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

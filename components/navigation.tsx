@@ -32,8 +32,7 @@ export default function Navigation() {
             { id: 1, title: "Home", url: "/" },
             { id: 2, title: "Blog", url: "/blog" },
             { id: 3, title: "Shop", url: "/shop" },
-            { id: 4, title: "About", url: "/about" },
-            { id: 5, title: "API Test", url: "/api-test" },
+            { id: 4, title: "About", url: "/about" }
           ])
         }
       } catch (error) {
@@ -43,8 +42,7 @@ export default function Navigation() {
           { id: 1, title: "Home", url: "/" },
           { id: 2, title: "Blog", url: "/blog" },
           { id: 3, title: "Shop", url: "/shop" },
-          { id: 4, title: "About", url: "/about" },
-          { id: 5, title: "API Test", url: "/api-test" },
+          { id: 4, title: "About", url: "/about" }
         ])
       } finally {
         setIsLoading(false)

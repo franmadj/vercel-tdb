@@ -21,13 +21,15 @@ interface CreditCardFormProps {
   orderAmount: string
   orderId: string
   onPaymentSuccess:CallableFunction
+  googlePayToken?: string
 }
 
 const CreditCardForm: React.FC<CreditCardFormProps> = ({
   billingDetails,
   orderAmount,
   orderId,
-  onPaymentSuccess
+  onPaymentSuccess,
+  googlePayToken 
 }) => {
   const [token, setToken] = useState<string | null>(null)
   const router = useRouter()

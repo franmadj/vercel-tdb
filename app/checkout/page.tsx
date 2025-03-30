@@ -3,9 +3,11 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
 import CreditCardForm from "@/components/creditCardForm"
+import GooglePayComponent from "@/components/GooglePayButton"
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart()
@@ -36,8 +38,10 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null)
   const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false)
   const [orderAmount, setOrderAmount] = useState("100.00"); // Example amount
-const [orderId, setOrderId] = useState("ORDER-12345"); // Example order ID
-const [orderCompleted, setOrderCompleted] = useState(false)
+  const [orderId, setOrderId] = useState("ORDER-12345"); // Example order ID
+  const [orderCompleted, setOrderCompleted] = useState(false)
+  const [googlePayToken, setGooglePayToken] = useState<string | null>(null);
+  const router = useRouter()
 
   const handlePaymentSuccess = () => {
     clearCart()
@@ -151,6 +155,36 @@ const [orderCompleted, setOrderCompleted] = useState(false)
       setIsLoading(false)
     }
   }
+
+  const processGooglePayToken = async (token: string) => {
+    console.log(token);
+    const formData = new FormData()
+    formData.append("action", "process_payment_google")
+    formData.append("token", token)
+
+    formData.append("orderId", orderId)
+
+    try {
+      const response = await fetch(
+        "https://staging.texasdebrazil.com/wp-admin/admin-ajax.php",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+
+      const data = await response.json()
+      console.log("Respuesta del backend:", data)
+      if (data.success) {
+        
+        router.push(`/thankyou?order_id=${orderId}`)
+        //onPaymentSuccess() // Trigger parent event
+      }
+    } catch (error) {
+      console.error("Error al enviar el token:", error)
+    }
+  };
+  
 
   if (cart.length === 0) {
     return (
@@ -493,12 +527,21 @@ const [orderCompleted, setOrderCompleted] = useState(false)
           {showPaymentForm && (
             <div id="payment-section" className="bg-white rounded-lg shadow-sm p-6">
             {!orderCompleted ? (
+              <div>
+              <GooglePayComponent
+  onPaymentSuccess={(token) => {
+    setGooglePayToken(token);
+    processGooglePayToken(token); // Send token to backend immediately
+  }}
+/>
+
               <CreditCardForm 
                 billingDetails={formData} 
                 orderAmount={orderAmount} 
                 orderId={orderId}
                 onPaymentSuccess={handlePaymentSuccess} // Pass callback 
               />
+              </div>
             ) : (
               <div className="text-center p-6 bg-white rounded-lg shadow-sm">
                 <p className="text-green-600 font-bold text-lg">ORDER RECEIVED!</p>
